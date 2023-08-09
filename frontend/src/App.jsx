@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
-import { ChakraProvider, Button } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 
+import Navbar from './components/layout/Navbar';
 import Test from './pages/Test';
 
 function App() {
   const [ethAddress, setETHAddress] = useState('');
 
-  const connectMetamask = async () => {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    setETHAddress(accounts[0]);
-  }
-
   return (
     <ChakraProvider>
       <HashRouter>
+        <Navbar
+          ethAddress={ethAddress}
+          setETHAddress={setETHAddress} />
         <Routes>
           <Route
             path="/test"
@@ -23,9 +22,7 @@ function App() {
             path="/"
             element={
               <div>
-                <Button onClick={connectMetamask}>
-                  {ethAddress ? ethAddress.slice(0, 5) + "..." + ethAddress.slice(37, 42) : 'Connect Wallet'}
-                </Button>
+               Home
               </div>} />
         </Routes>
       </HashRouter>
