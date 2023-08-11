@@ -17,17 +17,17 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get("/sendfund", async (req, res) => {
+app.post("/sendfund", async (req, res) => {
   try {
-    // const to = req.body.to;
-    // const amount = req.body.amount;
+    const to = req.body.to;
+    const amount = req.body.amount;
 
     const gasPrice = await provider.getGasPrice();
 
     const tx = {
       from: wallet.address,
-      to: wallet.address,
-      value: ethers.utils.parseUnits("0.0001", "ether"),
+      to: to,
+      value: ethers.utils.parseUnits(amount, "ether"),
       gasPrice: gasPrice,
       gasLimit: ethers.utils.hexlify(100000),
       nonce: await provider.getTransactionCount(
