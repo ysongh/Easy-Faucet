@@ -1,10 +1,24 @@
 import { Link as ReactLink } from 'react-router-dom';
 import { Container, Box, Flex, Heading, Spacer, Button, Link } from '@chakra-ui/react';
+import { ethers } from 'ethers';
 
-function Navbar({ ethAddress, setETHAddress }) {
+import FaucetNFT from "../../artifacts/contracts/FaucetNFT.sol/FaucetNFT.json";
+
+const MODE_CONTRACT_ADDRESS = "0xc1c025BC0A13Aba567f6C85Ea2A642AFb3d6bEd6";
+
+function Navbar({ ethAddress, setETHAddress, setContractNFT }) {
   const connectMetamask = async () => {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    setETHAddress(accounts[0]);
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      setETHAddress(accounts[0]);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+  
+      const contract = new ethers.Contract(MODE_CONTRACT_ADDRESS, FaucetNFT.abi, signer);
+      setContractNFT(contract);
+    } catch(error) {
+      console.error(error);
+    }
   }
 
   return (

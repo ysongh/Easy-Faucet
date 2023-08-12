@@ -8,13 +8,15 @@ import Test from './pages/Test';
 
 function App() {
   const [ethAddress, setETHAddress] = useState('');
+  const [contractNFT, setContractNFT] = useState(null);
 
   return (
     <ChakraProvider>
       <HashRouter>
         <Navbar
           ethAddress={ethAddress}
-          setETHAddress={setETHAddress} />
+          setETHAddress={setETHAddress}
+          setContractNFT={setContractNFT} />
         <Routes>
           <Route
             path="/test"
