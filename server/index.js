@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const ethers = require('ethers');
+const fetch = require('node-fetch').default;
 
 const app = express();
 
@@ -44,6 +45,38 @@ app.post("/sendfund", async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 });
+
+app.post("/verifyproof", async (req, res) => {
+  const reqBody = {
+    merkle_root: req.body.merkle_root,
+    nullifier_hash: req.body.nullifier_hash,
+    proof: req.body.proof,
+    credential_type: req.body.credential_type,
+    action: req.body.action, // or get this from environment variables,
+    signal: req.body.signal ?? "", // if we don't have a signal, use the empty string
+  };
+  fetch(`https://developer.worldcoin.org/api/v1/verify/${process.env.WLD_APP_ID}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(reqBody), 
+  }).then((verifyRes) => {
+    verifyRes.json().then((wldResponse) => {
+      if (verifyRes.status == 200) {
+        // this is where you should perform backend actions based on the verified credential
+        // i.e. setting a user as "verified" in a database
+        res.status(verifyRes.status).send({ code: "success" });
+      } else {
+        // return the error code and detail from the World ID /verify endpoint to our frontend
+        res.status(verifyRes.status).send({ 
+          code: wldResponse.code, 
+          detail: wldResponse.detail 
+        });
+      }
+    });
+  });
+})
 
 app.get('/', (req, res) => res.send('It Work'));
 

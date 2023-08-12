@@ -2,8 +2,26 @@ import { IDKitWidget } from '@worldcoin/idkit'
 
 function Test() {
 
-  const onSuccess = () => {
-
+  const onSuccess = async (proofdata) => {
+    try {
+      const res = await fetch('http://localhost:4000/verifyproof', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          merkle_root: proofdata.merkle_root,
+          nullifier_hash: proofdata.nullifier_hash,
+          proof: proofdata.proof,
+          credential_type: proofdata.credential_type,
+          action: "test"
+        })
+      })
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const handleVerify = () => {
@@ -13,8 +31,8 @@ function Test() {
   return (
     <div>
       <IDKitWidget
-        app_id="wid_staging_f606f23f9714d8677a654bf610d42587" // obtained from the Developer Portal
-        action="vote_1" // this is your action name from the Developer Portal
+        app_id="" // obtained from the Developer Portal
+        action="test" // this is your action name from the Developer Portal
         onSuccess={onSuccess} // callback when the modal is closed
         handleVerify={handleVerify} // optional callback when the proof is received
         credential_types={['orb', 'phone']} // optional, defaults to ['orb']
