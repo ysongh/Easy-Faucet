@@ -4,6 +4,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 
 import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
+import MintNFT from './pages/MintNFT';
 import Test from './pages/Test';
 
 function App() {
@@ -18,6 +19,9 @@ function App() {
           setETHAddress={setETHAddress}
           setContractNFT={setContractNFT} />
         <Routes>
+          <Route
+            path="/mintnft"
+            element={<MintNFT ethAddress={ethAddress} contractNFT={contractNFT} />} />
           <Route
             path="/test"
             element={<Test />} />

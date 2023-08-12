@@ -31,6 +31,7 @@ function Navbar({ ethAddress, setETHAddress, setContractNFT }) {
             </Link>
           </Box>
           <Link as={ReactLink} to="/">Home</Link>
+          <Link as={ReactLink} to="/mintnft">Mint</Link>
           <Link as={ReactLink} to="/test">Test</Link>
           <Spacer />
           <Button onClick={connectMetamask}>
