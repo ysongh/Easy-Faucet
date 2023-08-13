@@ -52,8 +52,8 @@ app.post("/verifyproof", async (req, res) => {
     nullifier_hash: req.body.nullifier_hash,
     proof: req.body.proof,
     credential_type: req.body.credential_type,
-    action: req.body.action, // or get this from environment variables,
-    signal: req.body.signal ?? "", // if we don't have a signal, use the empty string
+    action: req.body.action,
+    signal: req.body.signal ?? "",
   };
   fetch(`https://developer.worldcoin.org/api/v1/verify/${process.env.WLD_APP_ID}`, {
     method: "POST",
@@ -62,13 +62,30 @@ app.post("/verifyproof", async (req, res) => {
     },
     body: JSON.stringify(reqBody), 
   }).then((verifyRes) => {
-    verifyRes.json().then((wldResponse) => {
+    verifyRes.json().then(async (wldResponse) => {
       if (verifyRes.status == 200) {
-        // this is where you should perform backend actions based on the verified credential
-        // i.e. setting a user as "verified" in a database
-        res.status(verifyRes.status).send({ code: "success" });
+        const to = req.body.to;
+        const amount = req.body.amount;
+
+        const gasPrice = await provider.getGasPrice();
+
+        const tx = {
+          from: wallet.address,
+          to: to,
+          value: ethers.utils.parseUnits(amount, "ether"),
+          gasPrice: gasPrice,
+          gasLimit: ethers.utils.hexlify(100000),
+          nonce: await provider.getTransactionCount(
+            wallet.address,
+            "latest"
+          )
+        }
+      
+        const transaction = await wallet.sendTransaction(tx);
+        const data = await transaction.wait();
+
+        res.json(data);
       } else {
-        // return the error code and detail from the World ID /verify endpoint to our frontend
         res.status(verifyRes.status).send({ 
           code: wldResponse.code, 
           detail: wldResponse.detail 
