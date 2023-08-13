@@ -5,6 +5,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
 import MintNFT from './pages/MintNFT';
+import BurnerWallet from './pages/BurnerWallet';
 import Test from './pages/Test';
 
 function App() {
@@ -25,6 +26,9 @@ function App() {
           <Route
             path="/test"
             element={<Test />} />
+          <Route
+            path="/burnerwallet"
+            element={<BurnerWallet />} />
           <Route
             path="/"
             element={<Home />} />
