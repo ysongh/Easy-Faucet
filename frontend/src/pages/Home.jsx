@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, Box, Center, Heading, FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
+import { Container, Box, Center, Heading, FormControl, Select, FormLabel, Input, Button } from '@chakra-ui/react';
 import { IDKitWidget } from '@worldcoin/idkit';
 
 import { WLD_APP_ID } from '../../keys';
@@ -64,6 +64,14 @@ function Home() {
         <Box borderWidth='1px' borderRadius='lg' borderColor='green' overflow='hidden' p='5' width='500px' mt='5'>
           <Heading textAlign="center" fontSize="3xl" mb="4">Receive Faucet</Heading>
           <FormControl mb='3'>
+            <FormLabel htmlFor='network'>Network</FormLabel>
+            <Select placeholder='Select Network'>
+              <option value='option1'>Ethereum Goerli</option>
+              <option value='option2'>Optimism Goerli</option>
+              <option value='option3'>Base Testnet</option>
+            </Select>
+          </FormControl>
+          <FormControl mb='3'>
             <FormLabel htmlFor='address'>Address</FormLabel>
             <Input value={to} onChange={(e) => setTo(e.target.value)} />
           </FormControl>
@@ -73,7 +81,7 @@ function Home() {
           </FormControl>
 
           <Button mt="4" mb='2' onClick={receiveFaucet} isLoading={loading} loadingText='Submitting'>
-            Send
+            Verify with Faucet NFT and Send
           </Button>
 
           <br />
